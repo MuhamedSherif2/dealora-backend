@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import {
   getProperties, getFeatured, getProperty, getManagedProperties, createProperty,
-  updateProperty, updateStatus, deleteProperty, addImages, removeImage,getCities029346
+  updateProperty, updateStatus, deleteProperty, addImages, removeImage,getCities
 } from '../controllers/property.controller.js';
 import { protect, optionalAuth, restrictTo } from '../middlewares/auth.js';
 import { validate } from '../middlewares/validate.js';
