@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import {
   getProperties, getFeatured, getProperty, getManagedProperties, createProperty,
-  updateProperty, updateStatus, deleteProperty, addImages, removeImage,
+  updateProperty, updateStatus, deleteProperty, addImages, removeImage,getCities029346
 } from '../controllers/property.controller.js';
 import { protect, optionalAuth, restrictTo } from '../middlewares/auth.js';
 import { validate } from '../middlewares/validate.js';
@@ -17,6 +17,7 @@ const staff = [protect, restrictTo('agent', 'admin')];
 // public
 router.get('/', getProperties);
 router.get('/featured', getFeatured);
+router.get('/cities', getCities);
 
 // agent / admin dashboard (must be before /:idOrSlug)
 router.get('/manage/list', ...staff, getManagedProperties);

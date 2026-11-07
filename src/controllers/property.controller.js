@@ -172,3 +172,27 @@ export const removeImage = catchAsync(async (req, res) => {
   await property.save();
   success(res, { images: property.images });
 });
+
+// cities that actually have public listings, most listings first
+export const getCities = catchAsync(async (req, res) => {
+  const cities = await Property.aggregate([
+    { $match: { isActive: true, status: { $in: ['available', 'reserved'] } } },
+    { $sort: { createdAt: -1 } },
+    {
+      $group: {
+        _id: { country: '$location.country', ar: '$location.city.ar', en: '$location.city.en' },
+        count: { $sum: 1 },
+        image: { $first: { $arrayElemAt: ['$images.url', 0] } },
+      },
+    },
+    { $sort: { count: -1 } },
+    { $limit: 8 },
+    {
+      $project: {
+        _id: 0, count: 1, image: { $ifNull: ['$image', null] },
+        country: '$_id.country', city: { ar: '$_id.ar', en: '$_id.en' },
+      },
+    },
+  ]);
+  success(res, cities);
+});
