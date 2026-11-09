@@ -42,3 +42,7 @@ export const forgotPasswordSchema = z.object({ body: z.object({ email }) });
 export const resetPasswordSchema = z.object({
   body: z.object({ email, code: resetCode, newPassword: password }),
 });
+
+export const changePasswordSchema = z.object({
+  body: z.object({ currentPassword: z.string().min(1), newPassword: password }),
+});

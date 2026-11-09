@@ -112,3 +112,17 @@ export const resetPassword = catchAsync(async (req, res) => {
 
   success(res, null, { message: 'Password updated. Please log in with your new password.' });
 });
+
+export const changePassword = catchAsync(async (req, res) => {
+  const { currentPassword, newPassword } = req.body;
+  const user = await User.findById(req.user._id).select('+password');
+
+  if (!(await user.comparePassword(currentPassword))) throw new AppError('Current password is incorrect', 400);
+  if (currentPassword === newPassword) throw new AppError('New password must be different', 400);
+
+  user.password = newPassword; // hashed by the hook; old tokens stop working
+  await user.save();
+
+  // old tokens are now invalid, so return a fresh one for this session
+  success(res, { token: signToken(user) }, { message: 'Password updated' });
+});
